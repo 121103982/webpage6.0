@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>vote result</title>
+</head>
+<body>
+<h1>vote result</h1>
+<div id="resultsContainer"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const data = JSON.parse(localStorage.getItem('ratings'));
+        const container = document.getElementById('resultsContainer');
+        if (data) {
+            const userInfo = document.createElement('div');
+            userInfo.textContent = `Name: ${data.name}, Email: ${data.email}`;
+            container.appendChild(userInfo);
+
+            data.ratings.forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = `${item.image} - rate: ${item.rating}`;
+                container.appendChild(div);
+            });
+        } else {
+            container.textContent = 'No data';
+        }
+    });
+</script>
+</body>
+</html>

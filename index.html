@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote Road Level</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+        }
+        .require {
+            text-align: left;
+            width: 90%;
+            margin: 0 auto;
+            overflow-y: auto;
+            height: 50vh;
+            font-size: 1rem;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .image-container {
+            margin-bottom: 20px;
+        }
+        .rating-label {
+            font-size: 1rem;
+            margin: 0 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+        @media (max-width: 768px) {
+            .require {
+                font-size: 0.9rem;
+                height: 40vh;
+            }
+            .rating-label {
+                font-size: 0.8rem;
+                margin: 0 3px;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            img {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .require {
+                font-size: 0.8rem;
+                height: 30vh;
+            }
+            .rating-label {
+                font-size: 0.7rem;
+                margin: 0 2px;
+            }
+            button {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+</head>
+<body>
+<div class="content">
+    <h1>Welcome to Road Condition Rating System (PSCI)</h1>
+    <div class="require">
+        <p>
+            - Rating 10 (Excellent): Roads with no visible defects, routine maintenance.<br>
+            - Rating 9 (Very Good): Less than 10% surface defects, minor issues like ravelling or bleeding.<br>
+            - Rating 8 (Good): 10% to 30% surface defects, minor restoration needed for skid resistance.<br>
+            - Rating 7 (Good): More than 30% surface defects, no structural distresses.<br>
+            - Rating 6 (Fair): Some cracking and patching in good condition, slight surface distortions.<br>
+            - Rating 5 (Fair): Noticeable cracking (>20%), patching in fair condition, significant distortions.<br>
+            - Rating 4 (Poor): Structural distresses present like rutting and cracking, 5% to 25% of surface affected.<br>
+            - Rating 3 (Poor): 25% to 50% of surface with significant structural distresses, more frequent potholes.<br>
+            - Rating 2 (Very Poor): Severe structural distresses over 50% of surface, road reconstruction needed.<br>
+            - Rating 1 (Failed): Complete failure, extensive loss of pavement surface, deep potholes.<br>
+        </p>
+    </div>
+    <form id="ratingForm">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div><br><br>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div><br><br>
+        <div id="imagesContainer"></div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "web6400.firebaseapp.com",
+            databaseURL: "https://web6400-default-rtdb.firebaseio.com",
+            projectId: "web6400",
+            storageBucket: "web6400.appspot.com",
+            messagingSenderId: "43994478239",
+            appId: "1:43994478239:web:fdd259eb55559aa39794aa",
+            measurementId: "G-3QWTDFLBY0",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const images = [
+            '1.jpg',
+            '2.png',
+            '3.jpg',
+            '4.png',
+            '5.jpg',
+            '6.png',
+            '7.jpg',
+            '8.png',
+            '9.jpg',
+            '10.png',
+            '11.jpg',
+            '12.png',
+            '13.jpg',
+            '14.png',
+            '15.jpg',
+            '16.png',
+            '17.jpg',
+            '18.png',
+            '19.jpg',
+            '20.png',
+            '21.png',
+            '22.png',
+            '23.png',
+            '24.png',
+            '25.png',
+            '26.png',
+            '27.png',
+            '28.png',
+            '29.png',
+            '30.png',
+            '31.png',
+            '32.png',
+            '33.png',
+            '34.png',
+            '35.png',
+            '36.png',
+            '37.jpg',
+            '38.png',
+            '39.png',
+            '40.png',
+            '41.png',
+            '42.png',
+            '43.png',
+            '44.png',
+            '45.png',
+            '46.png',
+            '47.png',
+            '48.png',
+            '49.png',
+            '50.png',
+            '51.png',
+            '52.png',
+            '53.png',
+            '54.png',
+            '55.png',
+            '56.png',
+            '57.png',
+            '58.png',
+            '59.png',
+            '60.png',
+            '61.png',
+            '62.png',
+            '63.png',
+            '64.png',
+            '65.png',
+            '66.png',
+            '67.png',
+            '68.png',
+            '69.png',
+            '70.png',
+            '71.png',
+            '72.png',
+            '73.png',
+            '74.png',
+            '75.png',
+            '76.png',
+            '77.png',
+            '78.png',
+            '79.png',
+            '80.png',
+            '81.png',
+            '82.png',
+            '83.png',
+            '84.png',
+            '85.png',
+            '86.png',
+            '87.png',
+            '88.png',
+            '89.png',
+            '90.png',
+            '91.png',
+            '92.png',
+            '93.png',
+            '94.png',
+            '95.png',
+            '96.png',
+            '97.png',
+            '98.png',
+            '99.png',
+            '100.png',
+            '101.png',
+            '102.png',
+            '103.png',
+            '104.png',
+            '105.png',
+            '106.png',
+            '107.png',
+            '108.png',
+            '109.png',
+            '110.png',
+            '111.png',
+            '112.png',
+            '113.png',
+            '114.png',
+            '115.png',
+            '116.png',
+            '117.png',
+            '118.png',
+            '119.png',
+            '120.png',
+            '121.png',
+            '122.png',
+            '123.png',
+            '124.png'
+        ];
+        const container = document.getElementById('imagesContainer');
+
+        images.forEach((image, index) => {
+            const div = document.createElement('div');
+            const img = document.createElement('img');
+            img.src = `images/${image}`;
+            img.alt = `Image ${index + 1}`;
+            img.style.width = '640px';
+            div.appendChild(img);
+            div.appendChild(document.createElement('br'));
+
+            for (let i = 1; i <= 10; i++) {
+                const label = document.createElement('label');
+                label.innerText = `${i} `;
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `rating-${index}`;
+                radio.value = i;
+                div.appendChild(radio);
+                div.appendChild(label);
+            }
+            container.appendChild(div);
+            container.appendChild(document.createElement('br'));
+        });
+
+        document.getElementById('ratingForm').onsubmit = function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const data = {
+                name: name,
+                email: email,
+                ratings: []
+            };
+            images.forEach((image, index) => {
+                const radios = document.getElementsByName(`rating-${index}`);
+                radios.forEach(radio => {
+                    if (radio.checked) {
+                        data.ratings.push({image: image, rating: radio.value});
+                    }
+                });
+            });
+            const uuid = uuidv4(); // 生成唯一的 UUID
+            database.ref('ratings/' + uuid).set(data, function(error) {
+                if (error) {
+                    alert('Data could not be saved. ' + error);
+                } else {
+                    alert('Data saved successfully.');
+                    localStorage.setItem('ratings', JSON.stringify(data));
+                    window.location.href = 'result.html'; // Redirect to results page
+                }
+            });
+        };
+    });
+</script>
+<script src="script.js"></script>
+</body>
+</html>
